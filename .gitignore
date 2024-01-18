@@ -1,0 +1,41 @@
+# use glob syntax
+syntax: glob
+
+# classic temporary files
+*~
+*.bak
+*.swp
+*.versionsBackup
+
+# idea project
+.idea
+*.iml
+out/
+
+# Bloop/Metals
+.bloop
+.metals
+
+# VSCode
+.vscode
+
+# output of building
+target/
+
+# any tmp dir (for local test data)
+tmp/
+
+# Python byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# generated local databases
+*.db
+
+# Gradle
+.gradle
+build/
+
+# virtualenv
+/venv/
