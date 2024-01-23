@@ -12,6 +12,9 @@ validate-code-style:
   needs: []
 
 test:
-  stage: validate
+  stage: test
   script:
     - ./gradlew test
+  artifacts:
+    paths:
+      - build/reports
