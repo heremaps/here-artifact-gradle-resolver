@@ -16,7 +16,7 @@ class ArtifactResolver implements Plugin<Project> {
     static IvyArtifactRepository artifactRepo(Project project) {
         return project.repositories.ivy({
             name "HERE Artifact Service"
-            url ArtifactPropertiesResolver.resolveArtifactServiceUrl(HereAuth.getTokenEndpointUrl())
+            url ArtifactPropertiesResolver.getInstance().resolveArtifactServiceUrl(HereAuth.getInstance().getTokenEndpointUrl())
             metadataSources {
                 artifact()
             }
@@ -25,7 +25,7 @@ class ArtifactResolver implements Plugin<Project> {
             }
             credentials(HttpHeaderCredentials) {
                 name = 'Authorization'
-                value = "Bearer ${HereAuth.getToken()}"
+                value = "Bearer ${HereAuth.getInstance().getToken()}"
             }
             authentication {
                 header(HttpHeaderAuthentication)

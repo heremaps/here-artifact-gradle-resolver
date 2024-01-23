@@ -21,6 +21,17 @@ java {
 
 dependencies {
   implementation("com.here.account:here-oauth-client:0.4.25")
+  testImplementation(platform('org.junit:junit-bom:5.10.1'))
+  testImplementation('org.junit.jupiter:junit-jupiter')
+  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+  testImplementation('org.mockito:mockito-core:4.11.0')
+}
+
+test {
+  useJUnitPlatform()
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
 }
 
 gradlePlugin {
@@ -31,53 +42,3 @@ gradlePlugin {
     }
   }
 }
-
-//publishing {
-//  publications {
-//    create<MavenPublication>("pluginMaven") {
-//      pom {
-//        name.set(project.name)
-//        inceptionYear.set("2021")
-//        organization {
-//          name.set("HERE Global B.V.")
-//          url.set("https://here.com")
-//        }
-//        licenses {
-//          license {
-//            name.set("HERE Proprietary License")
-//            url.set("https://here.com")
-//            distribution.set("repo")
-//            comments.set("SPDX-License-Identifier: LicenseRef-Proprietary-HERE")
-//          }
-//        }
-//        scm {
-//          url.set("https://main.gitlab.in.here.com/olp/sdk/location/internal-tools/gradle-plugins")
-//          connection.set(
-//              "scm:git:https://main.gitlab.in.here.com/olp/sdk/location/internal-tools/gradle-plugins.git")
-//          developerConnection.set(
-//              "scm:git:ssh://git@main.gitlab.in.here.com:3389/olp/sdk/location/internal-tools/gradle-plugins.git")
-//          version = project.version.toString()
-//        }
-//        issueManagement {
-//          system.set("JIRA")
-//          url.set("https://saeljira.it.here.com/projects/OLPRPS")
-//        }
-//      }
-//      java { withSourcesJar() }
-//    }
-//  }
-//  val artifactoryPassword = System.getenv("ARTIFACTORY_PASSWORD")
-//  if (artifactoryPassword != null) {
-//    repositories {
-//      maven {
-//        credentials {
-//          username = "svc-arti-olp2"
-//          password = artifactoryPassword
-//        }
-//        url = uri("https://artifactory.in.here.com/artifactory/here-olp-sit")
-//      }
-//    }
-//  } else {
-//    repositories { mavenLocal() }
-//  }
-//}

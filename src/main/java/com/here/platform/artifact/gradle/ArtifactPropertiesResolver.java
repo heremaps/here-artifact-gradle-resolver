@@ -16,6 +16,9 @@ import java.util.Map;
 
 import static java.net.HttpURLConnection.HTTP_OK;
 
+/**
+ * Resolves default artifact service url based on here token url.
+ */
 public class ArtifactPropertiesResolver {
 
   private static final String TOKEN_PROD_URL = "https://account.api.here.com/oauth2/token";
@@ -56,17 +59,29 @@ public class ArtifactPropertiesResolver {
     URL_MAPPING = Collections.unmodifiableMap(map);
   }
 
+  private static ArtifactPropertiesResolver INSTANCE;
+
+  ArtifactPropertiesResolver() {
+  }
+
+  public static ArtifactPropertiesResolver getInstance() {
+    if (INSTANCE == null) {
+      INSTANCE = new ArtifactPropertiesResolver();
+    }
+    return INSTANCE;
+  }
+
   /**
    * Resolves schema default artifact service url based on here token url.
    *
    * @param tokenUrl here token url
    * @return resolved default artifact service url
    */
-
-  public static String resolveArtifactServiceUrl(String tokenUrl) throws IOException {
+  public String resolveArtifactServiceUrl(String tokenUrl) throws IOException {
     String artifactApiLookupUrl = getApiLookupUrl(tokenUrl) + "/platform/apis/artifact/v1";
-    HttpGet httpGet = new HttpGet(artifactApiLookupUrl);
-    try(CloseableHttpResponse response = executeRequest(httpGet)) {
+    HttpUriRequest lookupRequest = prepareRequest(artifactApiLookupUrl);
+    try (CloseableHttpClient client = buildClient();
+         CloseableHttpResponse response = client.execute(lookupRequest)) {
       int statusCode = response.getStatusLine().getStatusCode();
       InputStream content = response.getEntity().getContent();
       if (HTTP_OK == statusCode) {
@@ -77,7 +92,7 @@ public class ArtifactPropertiesResolver {
     }
   }
 
-  private static String getApiLookupUrl(String tokenUrl) {
+  private String getApiLookupUrl(String tokenUrl) {
     String endpoint = tokenUrl.trim();
     String apiLookupUrl = URL_MAPPING.get(endpoint);
     if (apiLookupUrl == null) {
@@ -86,26 +101,27 @@ public class ArtifactPropertiesResolver {
     return apiLookupUrl;
   }
 
-  private static String validatedAndParse(InputStream content) throws IOException {
+  @SuppressWarnings("unchecked")
+  private String validatedAndParse(InputStream content) throws IOException {
     List result = JsonSerializer.toPojo(content, List.class);
     Map<String, Object> apiItem = (Map<String, Object>) result.get(0);
     return apiItem.get("baseURL").toString() + "/artifact";
   }
 
-  private static CloseableHttpResponse executeRequest(HttpUriRequest httpRequest) throws IOException {
-    setBearer(httpRequest);
+  private HttpUriRequest prepareRequest(String artifactApiLookupUrl) {
+    HttpGet httpRequest = new HttpGet(artifactApiLookupUrl);
+    String token = HereAuth.getInstance().getToken();
+    httpRequest.setHeader("Authorization", "Bearer " + token);
     httpRequest.addHeader("Cache-control", "no-cache");
     httpRequest.addHeader("Cache-store", "no-store");
     httpRequest.addHeader("Pragma", "no-cache");
     httpRequest.addHeader("Expires", "0");
     httpRequest.addHeader("Accept-Encoding", "gzip");
-    CloseableHttpClient client = HttpClientBuilder.create().build();
-    return client.execute(httpRequest);
+    return httpRequest;
   }
 
-  private static void setBearer(HttpUriRequest httpRequest) {
-    String token = HereAuth.getToken();
-    httpRequest.setHeader("Authorization", "Bearer " + token);
+  CloseableHttpClient buildClient() {
+    return HttpClientBuilder.create().build();
   }
 
 }
