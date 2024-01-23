@@ -1,0 +1,17 @@
+default:
+  image: "hcr.data.here.com/platform/openjdk-8"
+
+stages:
+  - validate
+  - test
+
+validate-code-style:
+  stage: validate
+  script:
+    - ./gradlew spotlessCheck
+  needs: []
+
+test:
+  stage: validate
+  script:
+    - ./gradlew test

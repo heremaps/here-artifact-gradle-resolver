@@ -32,49 +32,49 @@ import java.util.Properties;
 
 public class HereAuth {
 
-  private static final int OAUTH_CONNECTION_TIMEOUT_IN_MS = 20000;
+    private static final int OAUTH_CONNECTION_TIMEOUT_IN_MS = 20000;
 
-  private static final int OAUTH_REQUEST_TIMEOUT_IN_MS = 20000;
+    private static final int OAUTH_REQUEST_TIMEOUT_IN_MS = 20000;
 
-  private static final String HERE_ENDPOINT_URL_KEY = "here.token.endpoint.url";
+    private static final String HERE_ENDPOINT_URL_KEY = "here.token.endpoint.url";
 
-  private static HereAuth INSTANCE;
+    private static HereAuth INSTANCE;
 
-  private Properties hereCredentials;
+    private Properties hereCredentials;
 
-  HereAuth(CredentialsResolver credentialsResolver) {
-    this.hereCredentials = credentialsResolver.resolveCredentials();
-  }
-
-  public static HereAuth getInstance() {
-    if (INSTANCE == null) {
-      INSTANCE = new HereAuth(new CredentialsResolver());
+    HereAuth(CredentialsResolver credentialsResolver) {
+        this.hereCredentials = credentialsResolver.resolveCredentials();
     }
-    return INSTANCE;
-  }
 
-  public String getTokenEndpointUrl() {
-    return hereCredentials.getProperty(HERE_ENDPOINT_URL_KEY);
-  }
+    public static HereAuth getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new HereAuth(new CredentialsResolver());
+        }
+        return INSTANCE;
+    }
 
-  public String getToken() {
-    TokenEndpoint tokenEndpoint = HereAccount.getTokenEndpoint(
-        createHttpProvider(),
-        new FromProperties(new SettableSystemClock(), hereCredentials)
-    );
-    return tokenEndpoint.requestToken(new ClientCredentialsGrantRequest()).getAccessToken();
-  }
+    public String getTokenEndpointUrl() {
+        return hereCredentials.getProperty(HERE_ENDPOINT_URL_KEY);
+    }
 
-  HttpProvider createHttpProvider() {
-    RequestConfig.Builder requestConfigBuilder = RequestConfig.custom()
-        .setConnectTimeout(OAUTH_CONNECTION_TIMEOUT_IN_MS)
-        .setConnectionRequestTimeout(OAUTH_REQUEST_TIMEOUT_IN_MS);
-    HttpClientBuilder clientBuilder = HttpClientBuilder.create().useSystemProperties()
-        .setDefaultRequestConfig(requestConfigBuilder.build());
-    return ApacheHttpClientProvider.builder()
-        .setHttpClient(clientBuilder.build())
-        .setDoCloseHttpClient(true)
-        .build();
-  }
+    public String getToken() {
+        TokenEndpoint tokenEndpoint = HereAccount
+            .getTokenEndpoint(createHttpProvider(), new FromProperties(new SettableSystemClock(), hereCredentials));
+        return tokenEndpoint.requestToken(new ClientCredentialsGrantRequest()).getAccessToken();
+    }
+
+    HttpProvider createHttpProvider() {
+        RequestConfig.Builder requestConfigBuilder = RequestConfig
+            .custom()
+            .setConnectTimeout(OAUTH_CONNECTION_TIMEOUT_IN_MS)
+            .setConnectionRequestTimeout(OAUTH_REQUEST_TIMEOUT_IN_MS);
+        HttpClientBuilder clientBuilder =
+                HttpClientBuilder.create().useSystemProperties().setDefaultRequestConfig(requestConfigBuilder.build());
+        return ApacheHttpClientProvider
+            .builder()
+            .setHttpClient(clientBuilder.build())
+            .setDoCloseHttpClient(true)
+            .build();
+    }
 
 }

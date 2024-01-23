@@ -3,6 +3,7 @@ plugins {
   id 'maven-publish'
   id 'groovy'
   id 'groovy-gradle-plugin'
+  id "com.diffplug.spotless" version "6.13.0"
 }
 
 repositories {
@@ -40,5 +41,12 @@ gradlePlugin {
       id = "com.here.platform.artifact.gradle"
       implementationClass = "com.here.platform.artifact.gradle.ArtifactResolver"
     }
+  }
+}
+
+spotless {
+  java {
+    target '**/*.java'
+    eclipse().configFile(rootProject.file('codestyle-formatter-settings.xml'))
   }
 }
