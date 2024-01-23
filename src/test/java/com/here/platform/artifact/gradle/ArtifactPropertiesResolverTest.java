@@ -42,7 +42,8 @@ class ArtifactPropertiesResolverTest {
             .thenReturn(new ByteArrayInputStream("[{\"baseURL\": \"mockedBaseUrl\"}]".getBytes()));
         Mockito.when(httpClientMock.execute(any())).thenReturn(responseMock);
         Mockito.when(artifactPropertiesResolver.buildClient()).thenReturn(httpClientMock);
-        String resolvedUrl = artifactPropertiesResolver.resolveArtifactServiceUrl("https://account.api.here.com/oauth2/token");
+        String resolvedUrl =
+                artifactPropertiesResolver.resolveArtifactServiceUrl("https://account.api.here.com/oauth2/token");
         Assertions.assertEquals("mockedBaseUrl/artifact", resolvedUrl);
     }
 
