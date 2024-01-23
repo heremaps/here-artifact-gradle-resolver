@@ -129,7 +129,7 @@ public class ArtifactPropertiesResolver {
 
     private HttpUriRequest prepareRequest(String artifactApiLookupUrl) {
         HttpGet httpRequest = new HttpGet(artifactApiLookupUrl);
-        String token = HereAuth.getInstance().getToken();
+        String token = getToken();
         httpRequest.setHeader("Authorization", "Bearer " + token);
         httpRequest.addHeader("Cache-control", "no-cache");
         httpRequest.addHeader("Cache-store", "no-store");
@@ -141,6 +141,10 @@ public class ArtifactPropertiesResolver {
 
     CloseableHttpClient buildClient() {
         return HttpClientBuilder.create().build();
+    }
+
+    String getToken() {
+        return HereAuth.getInstance().getToken();
     }
 
 }

@@ -42,6 +42,7 @@ class ArtifactPropertiesResolverTest {
             .thenReturn(new ByteArrayInputStream("[{\"baseURL\": \"mockedBaseUrl\"}]".getBytes()));
         Mockito.when(httpClientMock.execute(any())).thenReturn(responseMock);
         Mockito.when(artifactPropertiesResolver.buildClient()).thenReturn(httpClientMock);
+        Mockito.doReturn("mockedToken").when(artifactPropertiesResolver).getToken();
         String resolvedUrl =
                 artifactPropertiesResolver.resolveArtifactServiceUrl("https://account.api.here.com/oauth2/token");
         Assertions.assertEquals("mockedBaseUrl/artifact", resolvedUrl);
@@ -65,6 +66,7 @@ class ArtifactPropertiesResolverTest {
         Mockito.when(responseMock.getStatusLine().getReasonPhrase()).thenReturn("Some error reason");
         Mockito.when(httpClientMock.execute(any())).thenReturn(responseMock);
         Mockito.when(artifactPropertiesResolver.buildClient()).thenReturn(httpClientMock);
+        Mockito.doReturn("mockedToken").when(artifactPropertiesResolver).getToken();
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
             artifactPropertiesResolver.resolveArtifactServiceUrl("https://account.api.here.com/oauth2/token");
         });
