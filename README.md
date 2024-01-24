@@ -59,6 +59,16 @@ For example, to fetch the HERE Map Content - Topology Geometry - Protocol Buffer
         implementation "com.here.schema.rib:topology-geometry_v2_java:2.109.0"
     }
 
+#### Proxy Setup
+To enable Gradle and the HERE Gradle resolver plugin to work behind a proxy,
+you need to use standard `http_proxy` and `https_proxy` environment variables, like:
+```shell
+gradle build -Dhttps.proxyHost=$PROXY_HOST  -Dhttps.proxyPort=$PROXY_PORT -Dhttps.proxyUser=$PROXY_USERNAME -Dhttps.proxyPassword=$PROXY_PASSWORD
+```
+Alternatively, pass those by setting `JAVA_OPTS` in the environment variable, like:
+```shell
+export JAVA_OPTS="-Dhttps.proxyHost=$PROXY_HOST  -Dhttps.proxyPort=$PROXY_PORT -Dhttps.proxyUser=$PROXY_USERNAME -Dhttps.proxyPassword=$PROXY_PASSWORD"
+```
 
 ## License
 Copyright (C) 2019-2024 HERE Europe B.V.

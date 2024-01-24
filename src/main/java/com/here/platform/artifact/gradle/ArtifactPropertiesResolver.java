@@ -24,6 +24,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -140,7 +142,8 @@ public class ArtifactPropertiesResolver {
     }
 
     CloseableHttpClient buildClient() {
-        return HttpClientBuilder.create().build();
+        SystemDefaultRoutePlanner systemDefaultRoutePlanner = new SystemDefaultRoutePlanner(null);
+        return HttpClientBuilder.create().setRoutePlanner(systemDefaultRoutePlanner).build();
     }
 
     String getToken() {
