@@ -1,4 +1,4 @@
-# HERE Gradle Resolver for Workspace and Marketplace (Unofficial)
+# HERE Gradle Resolver for Workspace and Marketplace
 
 ## Introduction
 The HERE platform Gradle resolver plugin provides Java and Scala developers with access to HERE platform

@@ -1,9 +1,20 @@
 default:
   image: "hcr.data.here.com/platform/openjdk-8"
 
+include:
+  - project: oss/oss-review-toolkit/ort-gitlab-ci
+    ref: master
+    file: ort-gitlab-ci.yml
+
 stages:
   - validate
+  - ort-scan
   - test
+
+variables:
+  ENABLE_OLP_ARTIFACTS_REPOSITORY: "false"
+  ORT_SCANNING_ENABLED: "true"
+  ORT_LABELS: dist=external, deliverable=source-code, project=oss-here, org=development, tribe=platform-foundation, deliverable=fatjar, odin=2392
 
 validate-code-style:
   stage: validate
@@ -11,11 +22,13 @@ validate-code-style:
     - ./gradlew spotlessCheck
   needs: []
 
+ort-scan:
+  allow_failure: false
+
 test:
   stage: test
   script:
     - ./gradlew test
-
   artifacts:
     when: always
     paths:
