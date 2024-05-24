@@ -14,7 +14,37 @@ To publish the plugin into the local Maven repository run the command `./gradlew
 The project has unit tests based on `junit-jupiter` and `mockito`. To run the tests run the command: `./gradlew test`.
 
 ## Continuous Integration
-todo describe CI/CD workflow
+
+The CI is run on GitHub, meaning that files in the `.github` folder are used to define the workflows.
+
+### Presubmit Verification
+The purpose of this verification is to do a check that the code is not broken.
+
+The presubmit verification does the following:
+
+#### `Test` workflow
+
+##### `Validate` step
+This step checks the code style in all `.groovy` and `.java` files in the project. This job fails if the code is not formatted properly.
+
+##### `Test` step
+This step runs unit tests.
+
+### Submit Verification
+The purpose of this workflow is to verify that the `master` branch is always in the `ready for a deploy`
+state and release the plugin into the [Maven Central repository](https://repo.maven.apache.org/maven2/com/here/platform/artifact/gradle/gradle-resolver/).
+
+The submit verification runs all the [Presubmit Verification](#presubmit-verification) workflows with the following additional steps:
+#### `Release` workflow
+
+##### `Test` step
+This step runs unit tests.
+
+##### `Push git tag` step
+The step increments the current version and pushes a new git tag.
+
+##### `Deploy Release` step
+This step releases the plugin to the [Maven Central repository](https://repo.maven.apache.org/maven2/com/here/platform/artifact/gradle/gradle-resolver/).
 
 ## Coding Standards
 
