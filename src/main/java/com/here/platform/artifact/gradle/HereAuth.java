@@ -30,6 +30,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.util.Properties;
 
+/**
+ * Responsible for a handling of HERE authentication
+ */
 public class HereAuth {
 
     private static final int OAUTH_CONNECTION_TIMEOUT_IN_MS = 20000;
@@ -46,6 +49,11 @@ public class HereAuth {
         this.hereCredentials = credentialsResolver.resolveCredentials();
     }
 
+    /**
+     * Get or create singleton instance
+     * 
+     * @return HereAuth instance
+     */
     public static HereAuth getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new HereAuth(new CredentialsResolver());
@@ -53,10 +61,20 @@ public class HereAuth {
         return INSTANCE;
     }
 
+    /**
+     * Return token endpoint URL based on resolved credentials
+     * 
+     * @return token endpoint URL
+     */
     public String getTokenEndpointUrl() {
         return hereCredentials.getProperty(HERE_ENDPOINT_URL_KEY);
     }
 
+    /**
+     * Request new bearer token
+     * 
+     * @return token
+     */
     public String getToken() {
         TokenEndpoint tokenEndpoint = HereAccount
             .getTokenEndpoint(createHttpProvider(), new FromProperties(new SettableSystemClock(), hereCredentials));

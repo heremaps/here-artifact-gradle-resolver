@@ -24,9 +24,14 @@ import java.util.Properties;
 import static org.apache.http.util.TextUtils.isEmpty;
 
 /**
- * Resolves credentials based on system configuration. Credentials precedence: 1) -DhereCredentialsFile system property
- * 2) HERE_CREDENTIALS_FILE environment variable 3) HERE_CREDENTIALS_STRING environment variable 4)
- * ~/.here/credentials.properties file
+ * Resolves credentials based on system configuration. Credentials precedence:
+ * <p>
+ * <ol>
+ * <li>-DhereCredentialsFile system property
+ * <li>HERE_CREDENTIALS_FILE environment variable
+ * <li>HERE_CREDENTIALS_STRING environment variable
+ * <li>~/.here/credentials.properties file
+ * </ol>
  */
 public class CredentialsResolver {
 
@@ -35,6 +40,18 @@ public class CredentialsResolver {
     private static final String HERE_CREDENTIALS_PATH = ".here/credentials.properties";
     private static final String HERE_CREDENTIALS_ENV = "HERE_CREDENTIALS_FILE";
 
+    /**
+     * Resolve credentials based on a precedence:
+     * <p>
+     * <ol>
+     * <li>-DhereCredentialsFile system property
+     * <li>HERE_CREDENTIALS_FILE environment variable
+     * <li>HERE_CREDENTIALS_STRING environment variable
+     * <li>~/.here/credentials.properties file
+     * </ol>
+     * 
+     * @return resolved credentials
+     */
     public Properties resolveCredentials() {
         Properties properties = new Properties();
         File file = resolveFile();
