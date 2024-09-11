@@ -84,6 +84,11 @@ public class ArtifactPropertiesResolver {
     ArtifactPropertiesResolver() {
     }
 
+    /**
+     * Get or create singleton instance
+     * 
+     * @return ArtifactPropertiesResolver instance
+     */
     public static ArtifactPropertiesResolver getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new ArtifactPropertiesResolver();
@@ -96,6 +101,7 @@ public class ArtifactPropertiesResolver {
      *
      * @param tokenUrl here token url
      * @return resolved default artifact service url
+     * @throws java.io.IOException in case of a problem with connection
      */
     public String resolveArtifactServiceUrl(String tokenUrl) throws IOException {
         String artifactApiLookupUrl = getApiLookupUrl(tokenUrl) + "/platform/apis/artifact/v1";

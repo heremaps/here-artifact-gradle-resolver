@@ -1,3 +1,7 @@
+[![Build Status](https://github.com/heremaps/here-artifact-gradle-resolver/actions/workflows/release.yml/badge.svg)](https://github.com/heremaps/here-artifact-gradle-resolver/actions?query=workflow%3ARelease+branch%3Amaster)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.here.platform.artifact.gradle/gradle-resolver/badge.svg)](https://search.maven.org/artifact/com.here.platform.artifact.gradle/gradle-resolver)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
 # HERE Gradle Resolver for Workspace and Marketplace
 
 ## Introduction

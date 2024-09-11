@@ -3,7 +3,9 @@ plugins {
   id 'maven-publish'
   id 'groovy'
   id 'groovy-gradle-plugin'
-  id "com.diffplug.spotless" version "6.13.0"
+  id 'com.diffplug.spotless' version '6.13.0'
+  id 'signing'
+  id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
 }
 
 repositories {
@@ -11,13 +13,21 @@ repositories {
   mavenCentral()
 }
 
-group = "com.here.platform.artifact"
+group = "com.here.platform.artifact.gradle"
 
-version = "0.0.1-SNAPSHOT"
+if (project.hasProperty('projVersion')) {
+  project.version = project.projVersion
+} else {
+  project.version = '0.0.1-SNAPSHOT'
+}
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 java {
   sourceCompatibility = JavaVersion.VERSION_1_8
   targetCompatibility = JavaVersion.VERSION_1_8
+  withJavadocJar()
+  withSourcesJar()
 }
 
 dependencies {
@@ -36,10 +46,14 @@ test {
 }
 
 gradlePlugin {
+  vcsUrl = "https://github.com/heremaps/here-artifact-gradle-resolver"
+  website = "https://github.com/heremaps/here-artifact-gradle-resolver"
   plugins {
     create("hereArtifactResolver") {
       id = "com.here.platform.artifact.gradle"
       implementationClass = "com.here.platform.artifact.gradle.ArtifactResolver"
+      displayName = "HERE platform Gradle Resolver plugin"
+      description = "The HERE platform Gradle resolver plugin provides Java and Scala developers with access to HERE platform artifacts via Gradle"
     }
   }
 }
@@ -48,5 +62,57 @@ spotless {
   java {
     target '**/*.java'
     eclipse().configFile(rootProject.file('codestyle-formatter-settings.xml'))
+  }
+}
+
+publishing {
+  afterEvaluate {
+    publications {
+      withType(MavenPublication) {
+        pom {
+          name = "HERE platform Gradle Resolver plugin"
+          url = "https://github.com/heremaps/here-artifact-gradle-resolver"
+          description = "The HERE platform Gradle resolver plugin provides Java and Scala developers with access to HERE platform artifacts via Gradle"
+          licenses {
+            license {
+              name = "The Apache License, Version 2.0"
+              url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            }
+          }
+          scm {
+            connection = "scm:https://github.com/heremaps/here-artifact-gradle-resolver.git"
+            developerConnection = "scm:git@github.com:heremaps/here-artifact-gradle-resolver.git"
+            url = "https://github.com/heremaps/here-artifact-gradle-resolver"
+          }
+          developers {
+            developer {
+              name = "HERE Artifact Service Team"
+              email = "ARTIFACT_SERVICE_SUPPORT@here.com"
+              organization = "HERE Europe B.V."
+              organizationUrl = "https://github.com/heremaps"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+signing {
+  required { isReleaseVersion }
+  def signingKey = findProperty("asciiArmoredSigningKey")
+  def signingPassword = findProperty("signingPassword")
+  useInMemoryPgpKeys(signingKey, signingPassword)
+  sign publishing.publications
+}
+
+nexusPublishing {
+  repositories {
+    sonatype {
+      nexusUrl.set(uri("https://oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://oss.sonatype.org/content/repositories/snapshots/"))
+      username.set(project.properties["ossrhUsername"].toString())
+      password.set(project.properties["ossrhPassword"].toString())
+    }
   }
 }
