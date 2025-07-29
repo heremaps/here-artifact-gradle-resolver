@@ -19,8 +19,8 @@ gpg --version
 
 export ORG_GRADLE_PROJECT_asciiArmoredSigningKey=$(echo $GPG_PRIVATE_KEY | base64 -d)
 export ORG_GRADLE_PROJECT_signingPassword=$GPG_PASSPHRASE
-export ORG_GRADLE_PROJECT_ossrhUsername=$OSSRH_USERNAME
-export ORG_GRADLE_PROJECT_ossrhPassword=$OSSRH_PASSWORD
+export ORG_GRADLE_PROJECT_sonatypeUsername=$SONATYPE_USERNAME
+export ORG_GRADLE_PROJECT_sonatypePassword=$SONATYPE_PASSWORD
 
 RELEASE_TAG=$(git describe --abbrev=0)
 ./gradlew clean publish closeAndReleaseStagingRepositories -PprojVersion=$RELEASE_TAG --info
