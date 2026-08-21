@@ -45,11 +45,15 @@ Note that providing credentials via `HERE_CREDENTIALS_STRING` variable have the 
 ## How to use it?
 This Gradle resolver plugin is published on [Maven Central](https://search.maven.org/artifact/com.here.platform.artifact/gradle-resolver)
 so you can conveniently use it from your project.
+
+### Requirements
+The plugin is compiled for Java 21, so your build must run Gradle 8.5 or later on a JDK 21 or newer.
+
 The `gradle-resolver` plugin can be registered by adding an entry to `build.gradle` file as follows:
 
 
     plugins {
-        id 'com.here.platform.artifact.gradle' version '1.0.0'
+        id 'com.here.platform.artifact.gradle' version '2.0.1'
     }
     repositories {
         here()
@@ -75,6 +79,6 @@ export JAVA_OPTS="-Dhttps.proxyHost=$PROXY_HOST  -Dhttps.proxyPort=$PROXY_PORT -
 ```
 
 ## License
-Copyright (C) 2019-2024 HERE Europe B.V.
+Copyright (C) 2019-2026 HERE Europe B.V.
 
 Unless otherwise noted in `LICENSE` files for specific files or directories, the [LICENSE](LICENSE) in the root applies to all content in this repository.

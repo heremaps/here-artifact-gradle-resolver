@@ -24,18 +24,19 @@ if (project.hasProperty('projVersion')) {
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_17
-  targetCompatibility = JavaVersion.VERSION_17
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(21)
+  }
   withJavadocJar()
   withSourcesJar()
 }
 
 dependencies {
   implementation("com.here.account:here-oauth-client:0.4.25")
-  testImplementation(platform('org.junit:junit-bom:5.10.1'))
+  testImplementation(platform('org.junit:junit-bom:5.13.4'))
   testImplementation('org.junit.jupiter:junit-jupiter')
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-  testImplementation('org.mockito:mockito-core:4.11.0')
+  testImplementation('org.mockito:mockito-core:5.18.0')
 }
 
 test {
@@ -99,7 +100,7 @@ publishing {
 }
 
 signing {
-  required { isReleaseVersion }
+  required = { isReleaseVersion }
   def signingKey = findProperty("asciiArmoredSigningKey")
   def signingPassword = findProperty("signingPassword")
   useInMemoryPgpKeys(signingKey, signingPassword)
